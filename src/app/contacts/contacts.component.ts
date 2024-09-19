@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-contacts',
   templateUrl: './contacts.component.html',
@@ -14,9 +14,19 @@ import { FormControl, FormGroup } from '@angular/forms';
     `]
 })
 export class ContactsComponent implements OnInit {
+  
+constructor(){
+
+}
+
+
+  ngOnInit(): void {
+ 
+    
+  }
   userName: any;
   userSubject: any;
-
+ SubjectList :any []=[]
 
   contactList: any[] = [];
   onShow=false;
@@ -25,8 +35,9 @@ export class ContactsComponent implements OnInit {
 
   userContact:FormGroup=new FormGroup({
    
-    name:new FormControl(''),
-    subject:new FormControl('')
+    name:new FormControl('',[Validators.required  ]),
+    subject:new FormControl('',[Validators.required  ]),
+    subjectList: new FormArray([])
   })
 
  
@@ -36,6 +47,7 @@ export class ContactsComponent implements OnInit {
     console.log(obj);
     this.contactList.push(obj)
     console.log(this.contactList)
+    this.userContact.reset()
   }
 
   onEdit(contact: any, index: number) {
@@ -48,6 +60,8 @@ export class ContactsComponent implements OnInit {
   onDelete(index:any){
     this.contactList.splice(index,1)
   }
+
+  
   onSave(index:any ){
   
       const newData = {
@@ -58,7 +72,7 @@ export class ContactsComponent implements OnInit {
     console.log(newData);
     this.contactList.splice(index,1,newData);
     console.log(this.contactList)
-  //  alert("save succesful")
+
     this.editingContactId=null;
 
   }
@@ -69,12 +83,23 @@ export class ContactsComponent implements OnInit {
   onReset(){
     this.contactList=[];
   }
-  
-  constructor() { }
 
-  ngOnInit(): void {
- 
-    
+
+
+    onAdd() {
+      const newSub=this.userContact.value.subject;
+      const obj=this.userContact.value.subjectList.push(newSub);
+      this.SubjectList.push(newSub)
+      
+      console.log(this.userContact.value.subjectList)
+  
+    console.log("ok")
   }
+  onRemove(index:any){
+    this.SubjectList.splice(index,1)
+
+  }
+   
+  
 
 }
